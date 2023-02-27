@@ -1,0 +1,12 @@
+- hosts: all
+  user: centos
+  become: yes 
+  become_user: root
+  
+  roles:
+    - etais 
+
+  tasks:
+  - name: Testing this out
+    debug: msg="Hello user {{ansible_user_id}} on server {{ansible_hostname}}!"
+  
