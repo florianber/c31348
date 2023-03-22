@@ -8,5 +8,15 @@
 
   tasks:
   - name: Testing this out
-    debug: msg="Hello user {{ansible_user_id}} on server {{ansible_hostname}}!"
-  
+    debug: msg=Hello user {{ansible_user_id}} on server {{ansible_hostname}}!
+
+- hosts: localhost
+  user: centos
+  become: yes
+  vars:
+    hostname: c31348
+    domain_name: sa.cs.ut.e
+
+  roles:
+   - {role: etais, tags: etais}
+   - { role: dns, tags: dns }
