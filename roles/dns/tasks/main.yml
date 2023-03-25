@@ -23,6 +23,8 @@
     sysctl_file: /etc/sysctl.d/70-ipv6.conf
     reload: yes
 
+      #Hostname modification to corresponds to our own hostname
+
 - name: Inserts into hostname
   template: 
     src: hostname.j2
@@ -39,3 +41,57 @@
     group: root
     mode: '644'
 
+      ## File and directory creation in /var/named
+      # To use this file properly don't forget to add 
+      # the / before all the file because wihtout this 
+      # it will not create the files in the right place
+    
+- name: Creates log in /var/named
+  file:
+    path: var/named/log
+    state: directory
+    owner: root
+    group: named
+    mode: '770'
+
+      # This action allows to create multiple files 
+      # in a certain location
+
+- name: Creates all the files in /var/named/log
+  copy:
+    content: ""
+    dest: var/named/log/{{item}}
+    force: no
+    mode: '770'
+    owner: root
+    group: named  
+  with_items:
+    - default
+    - auth_servers
+    - zone_transfers
+    - client_security
+    - queries
+    - query-errors
+ 
+
+      #Start the named service
+      # but this is useless in our case because if named is stop
+      # the first action of the playbook cannot be played.
+- name: Start named service
+  ansible.builtin.service:
+    name: named
+    state: started
+
+      # As its name indicates this enable to auto-starting the named  
+- name: Enable auto-starting the named
+  ansible.builtin.service:
+    name: named
+    enabled: yes
+
+- name: Change the logging /etc/named.conf file
+  template:
+    src: named.conf.j2
+    dest: etc/named.conf
+    backup: true
+  
+   

@@ -15,7 +15,7 @@
   become: yes
   vars:
     hostname: c31348
-    domain_name: sa.cs.ut.e
+    domain_name: sa.cs.ut.ee
 
   roles:
    - {role: etais, tags: etais}
