@@ -14,8 +14,11 @@
   user: centos
   become: yes
   vars:
-    hostname: c31348
-    domain_name: sa.cs.ut.ee
+    - hostname: c31348
+    - domain_name: sa.cs.ut.ee
+      #this has to be changed on /etc if you want that something happen 
+    - etc: etc
+    - var: var
 
   roles:
    - {role: etais, tags: etais}

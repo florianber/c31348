@@ -48,7 +48,7 @@
     
 - name: Creates log in /var/named
   file:
-    path: var/named/log
+    path: "{{ var }}/named/log"
     state: directory
     owner: root
     group: named
@@ -60,7 +60,7 @@
 - name: Creates all the files in /var/named/log
   copy:
     content: ""
-    dest: var/named/log/{{item}}
+    dest: "{{var}}/named/log/{{item}}"
     force: no
     mode: '770'
     owner: root
@@ -77,8 +77,9 @@
       #Start the named service
       # but this is useless in our case because if named is stop
       # the first action of the playbook cannot be played.
+
 - name: Start named service
-  ansible.builtin.service:
+  service:
     name: named
     state: started
 
@@ -88,10 +89,50 @@
     name: named
     enabled: yes
 
-- name: Change the logging /etc/named.conf file
+      ## Here again if the use is real don't forget to add 
+      # the '/' before the etc/named.conf
+
+- name: Put the personnalize configuration file named in /etc/named.conf
   template:
     src: named.conf.j2
-    dest: etc/named.conf
+    dest: "{{etc}}/named.conf"
     backup: true
   
-   
+      ## Same thing here as before 
+  
+- name: Put the personnalize configuration file of the resolver in /etc/resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: "{{etc}}/resolv.conf"
+    backup: true
+
+      #Same thing as before with the '/' before etc
+      # Create a directoy named if it doesn't exist
+
+- name: Creates the directory /etc/named
+  file:
+    path: "{{etc}}/named"      
+    state: directory
+    owner: root
+    group: named
+    mode: '750'
+
+        # Creation of the two zone file normal and reverse one
+        # Here again for the 
+
+- name: Create the zone file of my domain name in /etc/named
+  template:
+    src: dns.zone.j2
+    dest: "{{etc}}/named/c31348.sa.cs.ut.ee"
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Create the zone file for the reverse mapping in /etc/named
+  template:
+    src: dns.reverse.zone.j2
+    dest: "{{etc}}/named/reverse.c31348.sa.cs.ut.ee"
+    owner: root
+    group: root
+    mode: '644'
+
