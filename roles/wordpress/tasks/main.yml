@@ -1,0 +1,49 @@
+- name: Install all the package for wordpress setup
+  dnf:
+    name:
+      - php-mysqlnd
+      - php-fpm 
+      - mariadb-server
+      - httpd
+      - tar
+      - curl
+      - php-json
+
+- name: Start mariadb
+  systemd:
+    name: mariadb
+    state: started
+    enabled: true
+
+# In case the mysqlclient is not install on the machine we can do it now 
+#
+- name: Install PyMySQL with pip to use mysql_user and mysql_db later 
+  pip:
+    name: PyMySQL
+    state: latest
+
+
+# Now we are going to do the database configuration with mysql_user
+
+- name: Set a root password 
+  mysql_user:
+    login_user: root
+    login_password: "{{sql_root_password}}"
+    user: root
+    password: "{{sql_root_password}}"
+
+- name: Remove all anymous user accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{sql_root_password}}"
+
+- name: Remove the MySQL test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{sql_root_password}}"
+

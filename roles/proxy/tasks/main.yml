@@ -11,7 +11,7 @@
 - name: Create a random python file
   template:
     src: python_flask.j2
-    dest: website.py
+    dest: "{{home}}/website.py"
     owner: root
     group: root
     mode: '664'
@@ -29,6 +29,37 @@
     owner: root
     group: root
     mode: '664'
+
+- name: Create a proxy user
+  user:
+    name: proxy
+      #To use the following part properly we should remove the {{home}}
+      #and put the file directly into /usr/local/lib/server.py
+- name: Move the python file website.py to /usr/local/lib/server.py
+  command: mv {{home}}/website.py {{home}}/usr/local/lib/server.py
+
+- name: Give the ownership to proxy user
+  file:
+    path: "{{home}}/usr/local/lib/server.py"
+    owner: proxy
+    group: proxy
+
+- name: Create the file for the proxy service /etc/systemd/system/proxy.service
+  template:
+    src: proxy.service.j2
+    dest: "{{etc}}/systemd/system/proxy.service"
+    owner: root
+    group: root
+    mode: '664'
+
+- name: Reoload systemctl service file 
+  systemd:
+    daemon_reload: true
+    name: proxy
+    state: started
+    enabled: true
+
 - name: Verify that the proxy is working
   uri:
     url: "http://proxy.{{hostname}}.{{domain_name}}"
+

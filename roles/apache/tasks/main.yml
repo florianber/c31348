@@ -45,6 +45,11 @@
 
 - shell: apachectl configtest
 
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+
 - name: Comment out everything in the /etc/httpd/conf.d/welcome.conf
   replace:
     path: "{{etc}}/httpd/conf.d/welcome.conf"
