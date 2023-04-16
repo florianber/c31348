@@ -1,0 +1,34 @@
+- name: Install Python
+  dnf:
+    name: python3-pip
+    state: latest
+
+- name: Install flask
+  pip:
+    name: flask
+    state: latest
+
+- name: Create a random python file
+  template:
+    src: python_flask.j2
+    dest: website.py
+    owner: root
+    group: root
+    mode: '664'
+
+- name: Seboolean | this equates to 'setsebool -P httpd_can_network_connect=1'
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+# Pay attention when you create this file to change the path for the vm name and the domain name
+- name: Create the proxy.conf file in etc/httpd/conf.d/proxy.conf
+  template:
+    src: proxy.conf.j2
+    dest: "{{etc}}/httpd/conf.d/proxy.conf"
+    owner: root
+    group: root
+    mode: '664'
+- name: Verify that the proxy is working
+  uri:
+    url: "http://proxy.{{hostname}}.{{domain_name}}"

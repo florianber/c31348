@@ -1,0 +1,8 @@
+
+- name: Restart httpd
+  service:
+    daemon_reload: yes
+    name: httpd
+    state: restarted
+    enabled: yes
+  listen: 'restart httpd'

@@ -85,7 +85,7 @@
 
       # As its name indicates this enable to auto-starting the named  
 - name: Enable auto-starting the named
-  ansible.builtin.service:
+  service:
     name: named
     enabled: yes
 
@@ -123,7 +123,7 @@
 - name: Create the zone file of my domain name in /etc/named
   template:
     src: dns.zone.j2
-    dest: "{{etc}}/named/c31348.sa.cs.ut.ee"
+    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
     owner: root
     group: root
     mode: '644'
@@ -131,7 +131,7 @@
 - name: Create the zone file for the reverse mapping in /etc/named
   template:
     src: dns.reverse.zone.j2
-    dest: "{{etc}}/named/reverse.c31348.sa.cs.ut.ee"
+    dest: "{{etc}}/named/reverse.{{hostname}}.{{domain_name}}"
     owner: root
     group: root
     mode: '644'

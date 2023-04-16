@@ -1,0 +1,65 @@
+- name: Install apache
+  dnf:
+    name: httpd
+    state: latest
+# Let open a port in the firewall to allow 
+
+- name: Open the right port in the firewall
+  firewalld:
+    port: 80/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Reload the firewall
+  service:
+    name: firewalld
+    state: reloaded
+
+- name: Start the apache service
+  service:
+    name: httpd
+    state: started
+# Then we need to enable the service when the machine reboot
+- name: Enable auto starting the httpd
+  service:
+    name: httpd
+    enabled: yes
+# Creation of the virtual host webroot directory
+- name: Create a webroot at /var/www/html/www.c31348
+  file:
+    path: "{{var}}/www/html/www.{{hostname}}/public_html"
+    state: directory
+    owner: root
+    group: root
+    mode: '770'
+
+- name: Create the configuration file in /etc/httpd/conf.d/www.c31348.conf and restart httpd
+  template:
+    src: www.httpd.conf.j2
+    dest: '{{etc}}/httpd/conf.d/www.{{hostname}}.conf'
+    owner: root
+    group: root
+    mode: '644'
+  notify: "restart httpd"
+
+- shell: apachectl configtest
+
+- name: Comment out everything in the /etc/httpd/conf.d/welcome.conf
+  replace:
+    path: "{{etc}}/httpd/conf.d/welcome.conf"
+    regexp: "^[^#](.*)$"
+    replace: '# \1'
+    backup: true
+
+- name: Create an index.html in /var/www/html/public_html
+  template:
+    src: index.html.j2
+    dest: "{{var}}/www/html/www.{{hostname}}/public_html/index.html"
+    owner: root
+    group: root
+    mode: '644' 
+
+- name: Verify if our page is available
+  uri:
+    url: "http://www.{{hostname}}.{{domain_name}}"

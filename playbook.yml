@@ -16,10 +16,12 @@
   vars:
     - hostname: c31348
     - domain_name: sa.cs.ut.ee
-      #this has to be changed on /etc if you want that something happen 
-    - etc: etc
-    - var: var
+      #this has to be changed on /etc and /var if you want that something happen 
+    - etc: /home/centos/etc
+    - var: /home/centos/var
 
   roles:
-   - {role: etais, tags: etais}
+   - { role: etais, tags: etais}
    - { role: dns, tags: dns }
+   - { role: apache, tags: apache}
+   - { role: proxy, tags: proxy}
