@@ -32,7 +32,13 @@
     state: directory
     owner: root
     group: root
-    mode: '770'
+    mode: '770
+      '
+- name: Modify the httpd.conf file in /etc/httpd/conf/httpd.conf to add the forensic module
+  template:
+    src: httpd.conf.j2
+    dest: "{{etc}}/httpd/conf/httpd.conf"
+
 
 - name: Create the configuration file in /etc/httpd/conf.d/www.c31348.conf and restart httpd
   template:
@@ -43,10 +49,27 @@
     mode: '644'
   notify: "restart httpd"
 
+- name: Add the forensic log file in /var/log/httpd/www.31348-forensic.log
+  copy:
+    content: ""
+    dest: "{{var}}/log/httpd/www.{{hostname}}-forensic.log"
+
+
 - name: Create the zone file with the addition of the field www
   template: 
     src: dns.zone.j2
     dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
+- name: Install modsecurity 
+  dnf:
+    name: mod_security
+    state: latest
+
+
+- name: Change some rules in /etc/httpd/modsecurity.d/local_rules/modsecurity_localrules.conf
+  template:
+    src: modsecurity.j2
+    dest: "{{etc}}/httpd/modsecurity.d/local_rules/modsecurity_localrules.conf"
 
 - shell: apachectl configtest
 

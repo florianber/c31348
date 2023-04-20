@@ -120,6 +120,11 @@
     src: wordpress.conf.j2
     dest: "{{etc}}/httpd/conf.d/wordpress.conf"
 
+- name: Create the file for forensic log in /var/log/httpd/wordpress-forensic.log
+  copy:
+    content: ""
+    dest: "{{var}}/log/httpd/wordpress-forensic.log"
+
 - name: Create the zone file for wordpress in /etc/named/dns.zone
   template:
     src: dns.zone.j2
