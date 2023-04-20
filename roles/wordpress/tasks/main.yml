@@ -94,21 +94,43 @@
     src: php-fpm.conf.j2
     dest: "{{etc}}/php-fpm.conf"
 
+# I don't know why this is not working but maybe I should do this by hand
 - name: Change the error_log=/var/log/httpd/www-php-errors.log in the /etc/php-fpm.d/www.conf
-  template:
-    src: www.conf.j2
+  copy:
+    src: www.conf
     dest: "{{etc}}/php-fpm.d/www.conf"
 
 - name: Create the error log file in /var/log/httpd/php-errors.log
-  file:
-    path: "{{var}}/log/httpd/php-errors.log"
+  copy:
+    content: ""
+    dest: "{{var}}/log/httpd/php-errors.log"
     owner: apache 
     group: apache
-    state: touch
 
-- name: Same for the log into /var/log/httpd/www-php-errors.log
-  template:
-    path: "{{var}}/log/httpd/www-php-errors.log"
+
+- name: Create the error log file in /var/log/hpttd/www-php-errors.log
+  copy:
+    content: ""
+    dest: "{{var}}/log/httpd/www-php-errors.log"
     owner: apache
     group: apache
 
+- name: Create the virtual host pointing at wordpress in /etc/httpd/conf.d/wordpress.conf
+  template:
+    src: wordpress.conf.j2
+    dest: "{{etc}}/httpd/conf.d/wordpress.conf"
+
+- name: Create the zone file for wordpress in /etc/named/dns.zone
+  template:
+    src: dns.zone.j2
+    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
+- name: Reload httpd
+  service:
+    name: httpd
+    state: reloaded
+
+- name: Start the php-fpm service
+  service:
+    name: php-fpm
+    state: started

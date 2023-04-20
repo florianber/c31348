@@ -30,6 +30,11 @@
     group: root
     mode: '664'
 
+- name: Create the zone file for proxy in /etc/named/dns.zone
+  template:
+    src: dns.zone.j2
+    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
 - name: Create a proxy user
   user:
     name: proxy

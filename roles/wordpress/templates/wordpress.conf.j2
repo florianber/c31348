@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+ ServerName wordpress.c31348.sa.cs.ut.ee
+ DocumentRoot /var/www/html/wordpress.c31348
+ # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+ LogLevel debug
+ 
+
+ ErrorLog /var/log/httpd/wordpress-error.log
+ CustomLog /var/log/httpd/wordpress-access.log combined
+</VirtualHost>
+

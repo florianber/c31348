@@ -43,6 +43,11 @@
     mode: '644'
   notify: "restart httpd"
 
+- name: Create the zone file with the addition of the field www
+  template: 
+    src: dns.zone.j2
+    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
 - shell: apachectl configtest
 
 - name: Restart httpd
