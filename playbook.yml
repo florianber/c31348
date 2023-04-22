@@ -28,3 +28,5 @@
    - { role: apache, tags: apache}
    - { role: proxy, tags: proxy}
    - { role: wordpress, tags: wordpress}
+   - { role: postfix, tags: postfix}
+   - { role: dovecot, tags: dovecot}

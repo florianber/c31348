@@ -1,0 +1,42 @@
+- name: Change the zone file to add the mail field in /etc/named/c31348.sa.cs.ut.ee
+  template:
+    src: dns.zone.j2
+    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+- name: Restart the named service 
+  service:
+    name: named
+    state: restarted
+
+- name: Install postfix
+  dnf:
+    name: postfix
+    state: latest
+
+- name: Open the port:25
+  firewalld:
+    port: 25/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Change the configuration file /etc/postfix/main.cf
+  template:
+    src: main.cf.j2
+    dest: "{{etc}}/postfix/main.cf"
+
+- name: Restart or start postfix
+  service:
+    name: postfix
+    state: restarted
+    enabled: true
+- name: Create a user mailuser with the password
+  user:
+    name: mailuser
+    password: azer1234
+
+- name: Send an email to nagios from mailuser
+  mail:
+    from: mailuser@c31348.sa.cs.ut.ee
+    subject: try
+    body: Hi it is just a try with ansible
+    to: nagios@scoring.sa.cs.ut.ee

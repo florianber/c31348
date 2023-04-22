@@ -1,0 +1,4 @@
+- name: Install dovecot
+  dnf:
+    name: dovecot
+    state: latest
