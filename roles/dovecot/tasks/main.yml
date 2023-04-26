@@ -2,3 +2,51 @@
   dnf:
     name: dovecot
     state: latest
+
+- name: Set the mail_debug to yes into /etc/dovecot/conf.d/10-logging.conf
+  template:
+    src: 10-logging.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-logging.conf"
+
+- name: Restart the dovecot service
+  service:
+    name: dovecot
+    state: restarted
+    enabled: true
+- name: Allow the imap protocol in /etc/dovecot/dovecot.conf
+  template:
+    src: imap_only.j2
+    dest: "{{etc}}/dovecot/dovecot.conf"
+
+- name: Allow dovecot to use PLAIN and LOGIN authentication methods in /etc/dovecot/conf.d/10-auth.conf
+  template:
+    src: 10-auth.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-auth.conf"
+
+- name: Move the directory for incoming emails from /var/mail to ~/mail in changing the maildir variable in /etc/dovecot/conf.d/10-mail.conf and put mail_privileged_group variable to mail
+  template:
+    src: 10-mail.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-mail.conf"
+
+- name: Add the user dovecot to the mail group, the equivalent with the usermod module is sudo usermod -a -G mail dovecot
+  user:
+    name: dovecot
+    append: true #the append is corresponding to the -a flag with usermod
+    groups: mail
+
+    
+- name: Enable automatic folder creation in /etc/dovecot/conf.d/15-mailboxes.conf
+  template:
+    src: 15-mailboxes.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/15-mailboxes.conf"
+
+- name: Open the port tcp/143 for imap et don't forget to allow that in etais
+  firewalld:
+    port: 143/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+
+
+
