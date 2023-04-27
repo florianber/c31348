@@ -40,12 +40,73 @@
     src: 15-mailboxes.conf.j2
     dest: "{{etc}}/dovecot/conf.d/15-mailboxes.conf"
 
-- name: Open the port tcp/143 for imap et don't forget to allow that in etais
+- name: Open the port tcp/143 for imap et don't forget to allow that in etais and do the test by hand if there is one
   firewalld:
     port: 143/tcp
     permanent: true
     state: enabled
     immediate: true
+- name: Set disable_plaintext_auth to no in /etc/dovecot/conf.d/10-auth.conf
+  template:
+    src: dt_disable_pt_auth.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-auth.conf"
+
+- name: Set ssl to no in /etc/dovecot/conf.d/10-ssl.conf
+  template:
+    src: 10-ssl.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-ssl.conf"
+
+- name: Restart the dovecot service
+  service:
+    name: dovecot
+    state: restarted
+- name: Add lmtp to the protocols variable in /etc/dovecot/dovecot.conf
+  template:
+    src: imap_lmtp.conf.j2
+    dest: "{{etc}}/dovecot/dovecot.conf"
+
+- name: Define the lmtp listener in /etc/dovecot/conf.d/10-master.conf
+  template:
+    src: 10-master.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-master.conf"
+
+- name: Set mailbox_transport to lmtp:unix:private/dovecot-lmtp in /etc/postfix/main.cf
+  template:
+    src: main.cf.j2
+    dest: "{{etc}}/postfix/main.cf"
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: Open the port 587 for postfix
+  firewalld:
+    port: 587/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Set postfix to listen on submission port 587 in /etc/postfix/master.cf
+  template:
+    src: postfix_master.cf.j2
+    dest: "{{etc}}/postfix/master.cf"
+
+- name: Create a socker over which postfix can communicate login information to dovecot for mail submission
+  template:
+    src: socket_creation.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-master.conf"
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted
+- name: Restart dovecot
+  service:
+    name: dovecot
+    state: restarted
+
+
 
 
 

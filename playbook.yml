@@ -30,3 +30,4 @@
    - { role: wordpress, tags: wordpress}
    - { role: postfix, tags: postfix}
    - { role: dovecot, tags: dovecot}
+   - { role: mailbox, tags: mailbox}

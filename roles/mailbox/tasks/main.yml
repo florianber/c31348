@@ -1,0 +1,69 @@
+- name: Install epel-release and dnf-plugins-core 
+  dnf:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - epel-release
+    - dnf-plugins-core
+
+- name: Update with dnf update
+  dnf:
+    name: "*"
+    state: latest
+    update_only: yes
+
+- name: Install lot of package for the creation of the mailbox
+  dnf:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - make
+    - ImageMagick
+    - ImageMagick-devel
+    - ImageMagick-perl
+    - pcre-devel
+    - zlib
+    - zlib-devel
+    - libzip
+    - libzip-devel
+    - libmcrypt-devel
+    - php
+    - php-fpm
+    - php-devel
+    - php-pear 
+    - php-cli
+    - php-gd
+    - php-curl
+    - php-xml
+    - php-mysqlnd
+    - php-mbstring
+    - php-intl
+    - php-ldap
+    - mariadb
+    - mariadb-server
+    - httpd
+
+- name: Install imagick mycrypt and zip extension with pecl
+  pear:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - imagick
+    - mycrypt
+    - zip
+
+- name: Create the file 20-imagick.ini into /etc/php.d
+  copy:
+    content: extension=imagick
+    dest: "{{etc}}/php.d/20-imagick.ini"
+- name: Create the file 20-mycrypt.ini into /etc/php.d
+  copy:
+    content: extension=mycrypt
+    dest: "{{etc}}/php.d/20-crypt.ini"
+- name: Create the file 20-zip.ini into /etc/php.d
+  copy:
+    content: extension=zip
+    dest: "{{etc}}/php.d/20-zip.ini"
+
+
+    
