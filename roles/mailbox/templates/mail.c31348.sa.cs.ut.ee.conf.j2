@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+  ServerAdmin root@c31348.sa.cs.ut.ee
+  ServerName mail.c31348.sa.cs.ut.ee
+  DocumentRoot /var/www/html/roundcubemail 
+  <Directory /var/www/html/roundcubemail>
+      Allowoverride all
+  </Directory>
+
+  ErrorLog /var/log/httpd/mail.c31348.sa.cs.ut.ee-error.log
+  CustomLog /var/log/httpd/mail.c31348.sa.cs.ut.ee-access.log combined
+  ForensicLog /var/log/httpd/mail.c31348.sa.cs.ut.ee-forensic.log
+</VirtualHost>

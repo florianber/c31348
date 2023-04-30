@@ -21,6 +21,7 @@
     - var: /home/centos/var
     - home: /home/centos
     - sql_root_password: "sql2023/tropbien!"
+    - roundcube_pass: "9LTm26KHyTFwXwjZ2rkduA=="
 
   roles:
    - { role: etais, tags: etais}

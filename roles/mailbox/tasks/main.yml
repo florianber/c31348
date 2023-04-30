@@ -43,15 +43,17 @@
     - mariadb-server
     - httpd
 
+      #It is better to that with items to know if there is a problem or just the program take lot of time to execute as there is a lot of file to install
+
 - name: Install imagick mycrypt and zip extension with pecl
   pear:
     name: "{{item}}"
     state: latest
   with_items:
-    - imagick
-    - mycrypt
-    - zip
-
+      - pecl/imagick
+      - pecl/mcrypt
+      - pecl/zip
+      #Create every file corresponding to the different extension 
 - name: Create the file 20-imagick.ini into /etc/php.d
   copy:
     content: extension=imagick
@@ -65,5 +67,76 @@
     content: extension=zip
     dest: "{{etc}}/php.d/20-zip.ini"
 
+- name: Restart and ennabled httpd mariadb and php-fpm
+  service:
+    name: httpd
+    state: restarted
+    enabled: true
 
+- name: Restart and ennabled httpd mariadb and php-fpm
+  service:
+    name: mariadb
+    state: restarted
+    enabled: true
+
+- name: Restart and ennabled httpd mariadb and php-fpm
+  service:
+    name: php-fpm
+    state: restarted
+    enabled: true
+
+
+- name: Create a database roundcubemail with encoding utf8 and collate utf8_general_ci
+  mysql_db:
+    name: roundcubemail
+    encoding: utf8_general_ci
+    login_user: root
+    login_password: "{{sql_root_password}}"
+
+- name: Create a new user roundcube
+  mysql_user:
+    name: roundcube
+    password: "{{roundcube_pass}}"
+    login_user: root
+    login_password: "{{sql_root_password}}"
+    priv: 'roundcubemail.*:ALL,GRANT'
     
+- name: Download the Roundcube release on the github server
+  command: wget https://github.com/roundcube/roundcubemail/releases/download/1.6.1/roundcubemail-1.6.1-complete.tar.gz -O {{home}}/roundcube.tar.gz
+
+
+- name: Unarchive the directory download
+  unarchive:
+    src: "{{home}}/roundcube.tar.gz"
+    dest: "{{home}}"
+  
+
+- name: Move the directory roundcube to roundcubemail to be renamed using a command
+  command: mv {{home}}/roundcubemail-1.6.1 {{var}}/www/html/roundcubemail
+
+- name: Give the right ownership to owner and group of all the directory
+  file:
+    path: "{{var}}/www/html/roundcubemail"
+    state: directory
+    owner: apache
+    group: apache
+    recurse: true
+
+- name: Sefcontext | this equates to 'chcon -t httpd_sys_rw_content_t /var/www/html/roundcubemail -R'
+  sefcontext:
+    target: '/var/www/html/roundcubemail(/.*)?'
+    setype: httpd_sys_rw_content_t
+    state: present
+
+- name: Create a conf file for mail in the /etc/httpd/conf.d for the apache configuration 
+  template:
+    src: mail.c31348.sa.cs.ut.ee.conf.j2
+    dest: "{{etc}}/httpd/conf.d/mail.c31348.sa.cs.ut.ee.conf"
+
+- name: Restart the httpd service to update it 
+  service:
+    name: httpd
+    state: restarted
+
+# The installation part of roundcube should be done by hand it would be better and easier, maybe too long to configure in ansible 
+#
