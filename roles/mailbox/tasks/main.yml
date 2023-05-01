@@ -112,8 +112,8 @@
   
 
 - name: Move the directory roundcube to roundcubemail to be renamed using a command
-  command: mv {{home}}/roundcubemail-1.6.1 {{var}}/www/html/roundcubemail
-
+  command: mv -n {{home}}/roundcubemail-1.6.1 {{var}}/www/html/roundcubemail
+    # The -n option allow to avoid overwriting it seems to mean never
 - name: Give the right ownership to owner and group of all the directory
   file:
     path: "{{var}}/www/html/roundcubemail"
