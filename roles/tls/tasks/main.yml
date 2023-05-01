@@ -1,0 +1,111 @@
+- name: Install mod_ssl 
+  dnf:
+    name: mod_ssl
+    state: latest
+
+- name: open the port 443 with firewalld
+  firewalld:
+    port: 443/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+# Here we are going to the same task as in the web server lab but adding the https accessibility in the configuration file
+#
+- name: Add the ssl command to the /etc/httpd/conf.d/www.c31348.conf
+  template:
+    src: www.c31348.conf.j2
+    dest: "{{etc}}/httpd/conf.d/www.c31348.conf"
+
+- name: Add the ssl command to the /etc/httpd/conf.d/proxy.conf
+  template:
+    src: proxy.conf.j2
+    dest: "{{etc}}/httpd/conf.d/proxy.conf"
+
+- name: Add the ssl command to the /etc/httpd/conf.d/wordpress.conf
+  template:
+    src: wordpress.conf.j2
+    dest: "{{etc}}/httpd/conf.d/wordpress.conf"
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+
+- name: If you want to test it it is working on your browser
+  pause:
+    prompt: You should test the open_ssl command
+
+
+
+- name: Add some configuration parameters in the /etc/postfix/main.cf
+  template:
+    src: main.cf.j2
+    dest: "{{etc}}/postfix/main.cf"
+
+- name: Add the certificate to /etc/pki/tls/certs/postfix.pem because of the precedent task
+  copy:
+    src: "{{etc}}/pki/tls/certs/www_server.crt"
+    dest: "{{etc}}/pki/tls/certs/postfix.pem"
+
+- name: Add the key to /etc/pki/tls/private/postfix.key because of the configuration task
+  copy:
+    src: "{{etc}}/pki/tls/private/www_server.key"
+    dest: "{{etc}}/pki/tls/private/postfix.key"
+
+- name: Add submission and smtp port declaration in the /etc/postfix/master.cf
+  template:
+    src: master.cf.j2
+    dest: "{{etc}}/postfix/master.cf"
+
+- name: Install cyrus-sasl-plain to solve an issue cause by a postifix update
+  dnf:
+    name: cyrus-sasl-plain
+    state: latest
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: open the port 465 with firewalld
+  firewalld:
+    port: 465/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open the port 587 with firewalld
+  firewalld:
+    port: 587/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+# Don"t forget to activate those ports in etais 
+
+- name: Encryption of dovecot traffic with /etc/dovecot/conf.d/10-ssl.conf
+  template:
+    src: 10-ssl.conf.j2
+    dest: "{{etc}}/dovecot/conf.d/10-ssl.conf"
+
+- name: Put the certificate file in the right location following the 10-ssl.conf file
+  copy:
+    src: "{{etc}}/pki/tls/certs/www_server.crt"
+    dest: "{{etc}}/pki/dovecot/certs/dovecot.pem"
+
+- name: Put the key file in the right location following the 10-ssl.conf file 
+  copy:
+    src: "{{etc}}/pki/tls/private/www_server.key"
+    dest: "{{etc}}/pki/dovecot/private/dovecot.key"
+- name: Restart dovecot
+  service:
+    name: dovecot
+    state: restarted
+
+- name: open the port 993 with firewalld
+  firewalld:
+    port: 993/tcp
+    permanent: true
+    state: enabled
+    immediate: true

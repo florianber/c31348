@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+ ServerName www.c31348.sa.cs.ut.ee
+ DocumentRoot /var/www/html/www.c31348/public_html
+ # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+ LogLevel debug
+ ForensicLog /var/log/httpd/www.c31348-forensic.log
+ ErrorLog /var/log/httpd/webmail-error.log
+ CustomLog /var/log/httpd/webmail-access.log combined
+</VirtualHost>
+
+<VirtualHost *:443>
+ ServerName www.c31348.sa.cs.ut.ee
+ DocumentRoot /var/www/html/www.c31348/public_html
+ # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+ LogLevel debug
+ ForensicLog /var/log/httpd/www.c31348-forensic.log
+ ErrorLog /var/log/httpd/webmail-error.log
+ CustomLog /var/log/httpd/webmail-access.log combined
+ SSLEngine on
+ SSLCertificateFile /etc/pki/tls/certs/www_server.crt
+ SSLCertificateKeyFile /etc/pki/tls/private/www_server.key
+ SSLCACertificateFile /etc/pki/tls/certs/cacert.crt
+</VirtualHost>
+
