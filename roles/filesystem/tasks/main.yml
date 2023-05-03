@@ -1,0 +1,40 @@
+#In case you want to create partition and mount a filesystem do that manually to prevent from mahcine messed up
+
+- name: Install the nfs package
+  dnf:
+    name: nfs-utils
+    state: latest
+
+- name: Start the nfs-server service
+  service:
+    name: nfs-server
+    state: started
+    enabled: true
+
+- name: Open the port 111 with firewalld
+  firewalld:
+    port: 111/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+- name: Open the port 2049 with firewalld
+  firewalld:
+    port: 2049/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+
+- name: Open the port 139 with firewalld
+  firewalld:
+    port: 139/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Open the port 445 with firewalld
+  firewalld:
+    port: 445/tcp
+    permanent: true
+    state: enabled
+    immediate: true

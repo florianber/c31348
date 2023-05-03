@@ -22,6 +22,7 @@
     - home: /home/centos
     - sql_root_password: "sql2023/tropbien!"
     - roundcube_pass: "9LTm26KHyTFwXwjZ2rkduA=="
+    - shares: /home/centos/shares
 
   roles:
    - { role: etais, tags: etais}
@@ -33,3 +34,6 @@
    - { role: dovecot, tags: dovecot}
    - { role: mailbox, tags: mailbox}
    - { role: tls, tags: tls}
+   - { role: filesystem, tags: filesystem}
+   - { role: samba, tags: samba}
+   - { role: obj_storage, tags: obj_storage}

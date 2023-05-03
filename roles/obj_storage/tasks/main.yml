@@ -1,0 +1,12 @@
+- name: Install the binary download minio, minio-binaries
+  command: curl https://dl.min.io/client/mc/release/linux-amd64/mc --create-dirs -o {{home}}/minio-binaries/mc
+
+- name: Change the mode of the downloaded file
+  file:
+    path: "{{home}}/minio-binaries"
+    mode: a+x
+    recurse: true
+    owner: centos
+    group: centos
+- name: Move the downloaded file mc in the /usr/bin meaning one path in $PATH
+  command: mv {{home}}/minio-binaries/mc /usr/bin/mc

@@ -1,0 +1,61 @@
+- name: Install some package for the samba filesystem
+  dnf:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - samba
+    - samba-common
+    - samba-client
+    - cifs-utils
+
+- name: Create the directory for samba in /shares/samba
+  file:
+    state: directory
+    path: "{{shares}}/samba"
+
+- name: Create a samba group samba_group
+  group:
+    name: samba_group
+    state: present
+
+- name: Add the user centos to the created group
+  user:
+     name: centos
+     groups: samba_group
+     append: true
+
+- name: Add the user scoring to the created group
+  user:
+     name: scoring
+     groups: samba_group
+     append: true
+
+- name: Add samba password for the users, run this for both of the users centos and scoring
+  pause: 
+    prompt: sudo smbpasswd -a scoring
+
+- name: Change the permission of the directory shares/samba
+  file:
+    path: "{{shares}}/samba"
+    state: directory
+    recurse: true
+    mode: 0755
+    owner: root
+    group: samba_group
+
+- name: Sefcontext | this equates to 'chcon -t samba_share_t /shares/samba'
+  sefcontext:
+    target: '{{shares}}/samba'
+    setype: samba_share_t
+    state: present
+
+- name: Edit the config file /etc/samba/smb.conf and add a little section
+  template:
+    src: smb.conf.j2
+    dest: "{{etc}}/samba/smb.conf"
+
+- name: Start and enable the smb service 
+  service:
+    name: smb
+    enabled: true
+    state: started
