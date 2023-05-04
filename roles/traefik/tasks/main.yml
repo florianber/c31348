@@ -1,0 +1,48 @@
+- name: Create the directory for traefik in /etc
+  file:
+    state: directory
+    path: "{{etc}}/traefik"
+
+- name: open the port 50080 with firewalld
+  firewalld:
+    port: 50080/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open the port 58080 with firewalld
+  firewalld:
+    port: 58080/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+
+- name: Reload the firewall and don't forget to open those port in ETAIS
+  service:
+    name: firewalld
+    state: reloaded
+
+- name: Install toml
+  pip:
+    name: toml
+    state: latest
+
+- name: Put the configuration file in it
+  template:
+    src: traefik.toml.j2
+    dest: "{{etc}}/traefik/traefik.toml"
+
+- name: Run traefik giving access to host and mounting the traefik.toml as a config file
+  pause:
+    prompt: "Run this if the traefik is not already running: docker run --name traefik -d -p 50080:80 -p 58080:8080 -v /var/run/docker.sock:/var/run/docker.sock:ro -v /etc/traefik/traefik.toml:/traefik.toml:ro --restart=always traefik:v2.1.8"
+
+- name: Create the file called docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{etc}}/traefik/docker-compose.yml"
+
+- name: Just a pause to show you what to do now
+  pause:
+    prompt: You need to run 'docker compose up -d' in the same directory as the .yml file and the configuration file in this example traefik.toml
+

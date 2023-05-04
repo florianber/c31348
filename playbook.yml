@@ -38,3 +38,4 @@
    - { role: samba, tags: samba}
    - { role: obj_storage, tags: obj_storage}
    - { role: docker, tags: docker}
+   - { role: traefik, tags: traefik}
