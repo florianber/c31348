@@ -1,0 +1,42 @@
+# Preparation tasks to install k3s
+- name: Create the whole path /var/lib/rancher/k3s/server/manifests
+  
+  file:
+    state: directory
+    recurse: true
+    path: "{{var}}/lib/rancher/k3s/server/manifests"
+
+- name: Create the file traefik-config.yml
+  template:
+    src: traefik-config.yml.j2
+    dest: "{{var}}/lib/rancher/k3s/server/manifests/traefik-config.yml"
+
+- name: Start k3s with systemd
+  systemd:
+    name: k3s
+    state: started
+
+- name: open the port 6443 with firewalld
+  firewalld:
+    port: 6443/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open the port 10250 with firewalld
+  firewalld:
+    port: 10250/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Reload the firewall and don't forget to open those port in ETAIS
+  service:
+    name: firewalld
+    state: reloaded
+
+- name: Put the right permission to k3s.yaml in /etc/rancher/k3s
+  file:
+    path: /etc/rancher/k3s/k3s.yaml
+    mode: 0644
+

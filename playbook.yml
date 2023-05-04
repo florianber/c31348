@@ -18,7 +18,7 @@
     - domain_name: sa.cs.ut.ee
       #this has to be changed on /etc and /var if you want that something happen 
     - etc: /home/centos/etc
-    - var: /home/centos/var
+    - var: /var #/home/centos/var
     - home: /home/centos
     - sql_root_password: "sql2023/tropbien!"
     - roundcube_pass: "9LTm26KHyTFwXwjZ2rkduA=="
@@ -39,3 +39,4 @@
    - { role: obj_storage, tags: obj_storage}
    - { role: docker, tags: docker}
    - { role: traefik, tags: traefik}
+   - { role: kubernetes, tags: kubernetes}
