@@ -1,0 +1,61 @@
+- name: Create the docker directory in /etc
+  file:
+    state: directory
+    path: "{{etc}}/docker"
+
+- name: Put the json file into the docker directory
+  template:
+    src: daemon.json.j2
+    dest: "{{etc}}/docker/daemon.json.j2"
+            
+
+- name: Just a pause to allow you to Install manually docker
+  pause:
+
+- name: open the port 5005 with firewalld
+  firewalld:
+    port: 5005/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Reload the firewall
+  service:
+    name: firewalld
+    state: reloaded
+
+- name: Create the docker lab folder 
+  file:
+    state: directory
+    path: "{{home}}/docker_lab"
+
+- name: Put the file server.py inside the docker folder
+  template:
+    src: server.py.j2
+    dest: "{{home}}/docker_lab/server.py"
+
+- name: Put the file Dockerfile into the docker folder 
+  template:
+    src: dockerfile.j2
+    dest: "{{home}}/docker_lab/Dockerfile"
+
+- name: Put the new dns configuration with the docker cname fields 
+  template:
+    src: dockerfile.dns_zone.j2
+    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
+- name: Put the virtual host for container-proxy in the /etc/httpd/conf.d folder
+  template:
+    src: container-proxy.conf.j2
+    dest: "{{etc}}/httpd/conf.d/container-proxy.c31348.sa.cs.ut.ee"
+
+- name: Restart named
+  service:
+    name: named
+    state: restarted
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+

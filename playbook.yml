@@ -37,3 +37,4 @@
    - { role: filesystem, tags: filesystem}
    - { role: samba, tags: samba}
    - { role: obj_storage, tags: obj_storage}
+   - { role: docker, tags: docker}
