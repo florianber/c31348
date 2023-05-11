@@ -17,7 +17,7 @@
     - hostname: c31348
     - domain_name: sa.cs.ut.ee
       #this has to be changed on /etc and /var if you want that something happen 
-    - etc: /home/centos/etc
+    - etc: /etc #/home/centos/etc
     - var: /var #/home/centos/var
     - home: /home/centos
     - sql_root_password: "sql2023/tropbien!"
@@ -40,3 +40,4 @@
    - { role: docker, tags: docker}
    - { role: traefik, tags: traefik}
    - { role: kubernetes, tags: kubernetes}
+   - { role: monitoring, tags: monitoring}

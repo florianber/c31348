@@ -1,0 +1,54 @@
+- name: open the port 514 with firewalld
+  firewalld:
+    port: 514/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: 'reload firewall'
+
+- name: Comment and uncomment some line in /etc/rsyslog.conf
+  template:
+    src: rsyslog.conf.j2
+    dest: "{{etc}}/rsyslog.conf"
+
+- name: Create the config file in /etc/rsyslog.d/01-receiving.conf
+  template:
+    src: receiving.conf.j2
+    dest: "{{etc}}/rsyslog.d/01-receiving.conf"
+
+- name: Restart the rsyslog service
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: open the port 30910  with firewalld
+  firewalld:
+    port: 30910/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: "reload firewall"
+
+- name: open the port 30909  with firewalld
+  firewalld:
+    port: 30909/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: "reload firewall"
+
+- name: open the port 30000  with firewalld
+  firewalld:
+    port: 30000/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: "reload firewall"
+
+- name: open the port 30310  with firewalld
+  firewalld:
+    port: 30310/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: "reload firewall"
