@@ -41,7 +41,7 @@
 
 - name: Send an email to nagios from mailuser
   mail:
-    from: mailuser@c31348.sa.cs.ut.ee
+    from: mailuser@{{hostname}}.{{domain_name}}
     subject: try
     body: Hi it is just a try with ansible
     to: nagios@scoring.sa.cs.ut.ee

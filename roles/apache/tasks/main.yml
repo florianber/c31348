@@ -33,7 +33,7 @@
     name: httpd
     enabled: yes
 # Creation of the virtual host webroot directory
-- name: Create a webroot at /var/www/html/www.c31348
+- name: Create a webroot at /var/www/html/www.hostname
   file:
     path: "{{var}}/www/html/www.{{hostname}}/public_html"
     state: directory
@@ -101,8 +101,8 @@
   template:
     src: index.html.j2
     dest: "{{var}}/www/html/www.{{hostname}}/public_html/index.html"
-    owner: root
-    group: root
+    owner: apache
+    group: apache
     mode: '644' 
 
 - name: Verify if our page is available

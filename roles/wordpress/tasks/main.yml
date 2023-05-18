@@ -59,7 +59,7 @@
     name: admin
     password: pass
     state: present
-    priv: 'wordpress.*:ALL,GRANT'
+    priv: 'WordPress.*:ALL,GRANT'
     login_user: root
     login_password: "{{sql_root_password}}"
 - name: Let's download wrodrpess with the curl command

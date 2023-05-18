@@ -1,9 +1,9 @@
 <VirtualHost *:80>
- ServerName www.c31348.sa.cs.ut.ee
- DocumentRoot /var/www/html/www.c31348/public_html
+ ServerName www.{{hostname}}.{{domain_name}}
+ DocumentRoot /var/www/html/www.{{hostname}}/public_html
  # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
  LogLevel debug
- ForensicLog /var/log/httpd/www.c31348-forensic.log
+ ForensicLog /var/log/httpd/www.{{hostname}}-forensic.log
  ErrorLog /var/log/httpd/webmail-error.log
  CustomLog /var/log/httpd/webmail-access.log combined
 </VirtualHost>

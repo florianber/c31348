@@ -1,17 +1,17 @@
 ;Zone file for c31348.sa.cs.ut.ee
 $TTL 	15M
-@ 	IN 	SOA ns1.c31348.sa.cs.ut.ee root.c31348.sa.cs.ut.ee (
+@ 	IN 	SOA ns1.{{hostname}}.{{domain_name}} root.{{hostname}}.{{domain_name}} (
 	2012020204	;Serial
 	15M	;Refresh
 	5M	;Retry
 	120M	;Expire
 	600 )	;Negative Cache TTL)
 @ 	IN 	NS	ns1
-@ 	IN 	A 172.17.89.120
-ns1 	IN 	A 172.17.89.120
-c31348 	IN 	A 172.17.89.120
+@ 	IN 	A {{ip_address}}
+ns1 	IN 	A {{ip_address}}
+{{hostname}} 	IN 	A {{ip_address}}
 ;mail	IN 	A 172.17.89.120
-www 	IN	CNAME c31348.sa.cs.ut.ee.
+www 	IN	CNAME {{hostname}}.{{domain_name}}.
 ;proxy 	IN 	CNAME c31348.sa.cs.ut.ee.
 ;wordpress IN 	CNAME c31348.sa.cs.ut.ee.
 ;c31348.sa.cs.ut.ee. IN MX 10 mail.c31348.sa.cs.ut.ee.

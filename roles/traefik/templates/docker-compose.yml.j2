@@ -16,5 +16,5 @@ services:
     container_name: "whoami-traefik"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami-traefik.rule=Host(`c31348.sa.cs.ut.ee`)"
+      - "traefik.http.routers.whoami-traefik.rule=Host(`{{hostname}}.{{domain_name}}`)"
       - "traefik.http.routers.whoami-traefik.entrypoints=web"
