@@ -46,6 +46,11 @@
     permanent: true
     state: enabled
     immediate: true
+
+- name: Reload the firewall
+  service:
+    name: firewalld
+    state: reloaded
 - name: Set disable_plaintext_auth to no in /etc/dovecot/conf.d/10-auth.conf
   template:
     src: dt_disable_pt_auth.conf.j2
@@ -86,6 +91,11 @@
     permanent: true
     state: enabled
     immediate: true
+
+- name: Reload the firewalld
+  service:
+    name: firewalld
+    state: reloaded
 
 - name: Set postfix to listen on submission port 587 in /etc/postfix/master.cf
   template:

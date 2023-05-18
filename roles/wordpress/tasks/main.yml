@@ -77,15 +77,15 @@
 
 - name: Change the owner and the group to the directory
   file:
-    path: "{{var}}/www/hmtl/wordpress"
+    path: "{{var}}/www/html/wordpress.{{hostname}}"
     owner: apache
     group: apache 
     state: directory
     recurse: true
 
-- name: Sefcontext | this equates to 'chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R'
+- name: Sefcontext | this equates to 'chcon -t httpd_sys_rw_content_t /var/www/html/wordpress.c31348 -R'
   sefcontext:
-   target: '{{var}}/www/html/wordpress(/.*)?'
+   target: '{{var}}/www/html/wordpress.{{hostname}}(/.*)?'
    setype: httpd_sys_rw_content_t
    state: present
 
@@ -129,6 +129,13 @@
   template:
     src: dns.zone.j2
     dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
+
+- name: Restart named
+  service:
+    name: named
+    state: restarted
+
 
 - name: Reload httpd
   service:

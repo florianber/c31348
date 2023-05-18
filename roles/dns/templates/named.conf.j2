@@ -175,15 +175,15 @@ zone "." IN {
 	type hint;
 	file "named.ca";
 };
-zone "c31348.sa.cs.ut.ee" IN {
+zone "{{hostname}}.{{domain_name}}" IN {
         type master;
-        file "/etc/named/c31348.sa.cs.ut.ee";
+        file "/etc/named/{{hostname}}.{{domain_name}}";
         allow-update { none; };
 	notify explicit;
 };
-zone "89.17.172.in-addr.arpa" IN {
+zone "{{reverse_addr}}" IN {
         type master;
-        file "/etc/named/reverse.c31348.sa.cs.ut.ee";
+        file "/etc/named/reverse.{{hostname}}.{{domain_name}}";
         allow-update { none; };
 };
 

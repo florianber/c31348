@@ -40,6 +40,14 @@
     src: dns.zone.j2
     dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
 
+
+- name: Restart named
+  service:
+    name: named
+    state: restarted
+
+
+
 - name: Create a proxy user
   user:
     name: proxy

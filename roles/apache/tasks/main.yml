@@ -11,6 +11,13 @@
     state: enabled
     immediate: true
 
+- name: Open the right port in the firewall
+  firewalld:
+    port: 443/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
 - name: Reload the firewall
   service:
     name: firewalld
@@ -59,6 +66,11 @@
   template: 
     src: dns.zone.j2
     dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
+
+- name: Restart named
+  service:
+    name: named
+    state: restarted
 
 - name: Install modsecurity 
   dnf:

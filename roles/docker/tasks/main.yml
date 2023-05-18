@@ -47,7 +47,7 @@
 - name: Put the virtual host for container-proxy in the /etc/httpd/conf.d folder
   template:
     src: container-proxy.conf.j2
-    dest: "{{etc}}/httpd/conf.d/container-proxy.c31348.sa.cs.ut.ee"
+    dest: "{{etc}}/httpd/conf.d/container-proxy.c31348.sa.cs.ut.ee.conf"
 
 - name: Restart named
   service:
@@ -58,4 +58,7 @@
   service:
     name: httpd
     state: restarted
-
+- name: Start docker
+  service:
+    name: docker
+    state: started

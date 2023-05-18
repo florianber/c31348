@@ -6,12 +6,6 @@
     - epel-release
     - dnf-plugins-core
 
-- name: Update with dnf update
-  dnf:
-    name: "*"
-    state: latest
-    update_only: yes
-
 - name: Install lot of package for the creation of the mailbox
   dnf:
     name: "{{item}}"
@@ -137,6 +131,7 @@
   service:
     name: httpd
     state: restarted
+
 
 # The installation part of roundcube should be done by hand it would be better and easier, maybe too long to configure in ansible 
 #

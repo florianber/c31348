@@ -74,6 +74,7 @@
     permanent: true
     state: enabled
     immediate: true
+  notify: "reload firewall"
 
 - name: open the port 587 with firewalld
   firewalld:
@@ -81,6 +82,7 @@
     permanent: true
     state: enabled
     immediate: true
+  notify: "reload firewall"
 
 # Don"t forget to activate those ports in etais 
 
@@ -109,3 +111,4 @@
     permanent: true
     state: enabled
     immediate: true
+  notify: "reload firewall"

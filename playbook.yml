@@ -16,6 +16,9 @@
   vars:
     - hostname: c31348
     - domain_name: sa.cs.ut.ee
+    - ip_address: 172.17.89.120
+    - last_ip: 120
+    - reverse_addr: 89.17.172.in-addr.arpa
       #this has to be changed on /etc and /var if you want that something happen 
     - etc: /etc #/home/centos/etc
     - var: /var #/home/centos/var

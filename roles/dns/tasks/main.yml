@@ -1,3 +1,37 @@
+- name: open the port 53  with firewalld
+  firewalld:
+    port: 53/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: 'reload firewall'
+
+
+- name: open the port 53  with firewalld
+  firewalld:
+    port: 53/udp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: 'reload firewall'
+
+- name: open the port 8301 with firewalld
+  firewalld:
+    port: 8301/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: 'reload firewall'   
+
+
+- name: open the port 8301 with firewalld
+  firewalld:
+    port: 8301/udp
+    permanent: true
+    state: enabled
+    immediate: true
+  notify: 'reload firewall'    
+
 - name: DNS | Autoremove unneeded packages installed as dependencie
   dnf:
     autoremove: yes
