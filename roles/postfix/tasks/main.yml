@@ -1,12 +1,3 @@
-- name: Change the zone file to add the mail field in /etc/named/c31348.sa.cs.ut.ee
-  template:
-    src: dns.zone.j2
-    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
-- name: Restart the named service 
-  service:
-    name: named
-    state: restarted
-
 - name: Install postfix
   dnf:
     name: postfix

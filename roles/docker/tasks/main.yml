@@ -39,20 +39,10 @@
     src: dockerfile.j2
     dest: "{{home}}/docker_lab/Dockerfile"
 
-- name: Put the new dns configuration with the docker cname fields 
-  template:
-    src: dockerfile.dns_zone.j2
-    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
-
 - name: Put the virtual host for container-proxy in the /etc/httpd/conf.d folder
   template:
     src: container-proxy.conf.j2
     dest: "{{etc}}/httpd/conf.d/container-proxy.{{hostname}}.{{domain_name}}.conf"
-
-- name: Restart named
-  service:
-    name: named
-    state: restarted
 
 - name: Restart httpd
   service:

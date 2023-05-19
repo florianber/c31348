@@ -47,10 +47,9 @@
   file:
     path: "{{var}}/www/html/www.{{hostname}}/public_html"
     state: directory
-    owner: root
-    group: root
-    mode: '770
-      '
+    owner: apache
+    group: apache
+    mode: '775'
 - name: Modify the httpd.conf file in /etc/httpd/conf/httpd.conf to add the forensic module
   template:
     src: httpd.conf.j2
@@ -71,16 +70,6 @@
     content: ""
     dest: "{{var}}/log/httpd/www.{{hostname}}-forensic.log"
 
-
-- name: Create the zone file with the addition of the field www
-  template: 
-    src: dns.zone.j2
-    dest: "{{etc}}/named/{{hostname}}.{{domain_name}}"
-
-- name: Restart named
-  service:
-    name: named
-    state: restarted
 
 - name: Install modsecurity 
   dnf:
