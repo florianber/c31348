@@ -112,6 +112,14 @@
       # but this is useless in our case because if named is stop
       # the first action of the playbook cannot be played.
 
+
+- name: Put the personnalize configuration file named in /etc/named.conf
+  template:
+    src: named.conf.j2
+    dest: "{{etc}}/named.conf"
+    backup: true
+
+
 - name: Start named service
   service:
     name: named

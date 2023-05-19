@@ -8,13 +8,6 @@
       owner: scoring
       group: scoring
       mode: '0700'
-  - name: Download server scoring public key
-    get_url:
-      url: https://scoring.sa.cs.ut.ee/files/id_rsa.pub
-      dest: /home/scoring/.ssh/authorized_keys
-      owner: scoring
-      group: scoring
-      mode: '0600'
         
   - name: Create the /etc/sudoers.d/scoring file
     lineinfile:

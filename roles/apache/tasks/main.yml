@@ -23,6 +23,16 @@
     name: firewalld
     state: reloaded
 
+- name: Create the configuration file in /etc/httpd/conf.d/www.c31348.conf and restart httpd
+  template:
+    src: www.httpd.conf.j2
+    dest: '{{etc}}/httpd/conf.d/www.{{hostname}}.conf'
+    owner: root
+    group: root
+    mode: '644'
+  notify: "restart httpd"
+
+
 - name: Start the apache service
   service:
     name: httpd

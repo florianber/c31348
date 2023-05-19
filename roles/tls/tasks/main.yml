@@ -42,6 +42,7 @@
   template:
     src: main.cf.j2
     dest: "{{etc}}/postfix/main.cf"
+      
 
 - name: Add the certificate to /etc/pki/tls/certs/postfix.pem because of the precedent task
   copy:
